@@ -5,7 +5,7 @@
         </header>
         <main class="t_main">
             <div class="t_left_box">
-                <img class="t_l_line" src="../../../public/img/left_line.png" alt="">
+                <img class="t_l_line" src="#/public/img/left_line.png" alt="">
                 <div class="t_mbox t_rbox">
                     <i></i>
                     <span>本月设备故障数</span>
@@ -21,11 +21,11 @@
                     <span>故障损失</span>
                     <h2>1.14%</h2>
                 </div>
-                <img class="t_r_line" src="../../../public/img/right_line.png" alt="">
+                <img class="t_r_line" src="#/public/img/right_line.png" alt="">
             </div>
             <div class="t_center_box">
                 <div class="t_top_box">
-                    <img class="t_l_line" src="../../../public/img/left_line.png" alt="">
+                    <img class="t_l_line" src="#/public/img/left_line.png" alt="">
                     <ul class="t_nav">
                         <li>
                             <span>设备数</span>
@@ -42,24 +42,24 @@
                             <h1>15%</h1>
                         </li>
                     </ul>
-                    <img class="t_r_line" src="../../../public/img/right_line.png" alt="">
+                    <img class="t_r_line" src="#/public/img/right_line.png" alt="">
                 </div>
                 <div class="t_bottom_box">
-                    <img class="t_l_line" src="../../../public/img/left_line.png" alt="">
+                    <img class="t_l_line" src="#/public/img/left_line.png" alt="">
                     <div id="chart_3" class="echart" style="width: 100%; height: 3.6rem;"></div>
-                    <img class="t_r_line" src="../../../public/img/right_line.png" alt="">
+                    <img class="t_r_line" src="#/public/img/right_line.png" alt="">
                 </div>
             </div>
             <div class="t_right_box">
-                <img class="t_l_line" src="../../../public/img/left_line.png" alt="">
+                <img class="t_l_line" src="#/public/img/left_line.png" alt="">
                 <div id="chart_4" class="echart" style="width: 50%; height: 4.6rem; position: absolute;"></div>
                 <header class="t_b_h">
                     <span>异常终止次数</span>
-                    <img src="../../../public/img/end.png">
+                    <img src="#/public/img/end.png">
                     <h3>5<span>次</span></h3>
                 </header>
                 <main class="t_b_m">
-                    <img src="../../../public/img/map.png" alt="">
+                    <img src="#/public/img/map.png" alt="">
                     <div class="t_b_box">
                         <span>溫度</span>
                         <i></i>
@@ -81,20 +81,20 @@
                         <h2>250LX</h2>
                     </div>
                 </main>
-                <img class="t_r_line" src="../../../public/img/right_line.png" alt="">
+                <img class="t_r_line" src="#/public/img/right_line.png" alt="">
         </div>
         <div class="b_left_box">
-                <img class="t_l_line" src="../../../public/img/left_line.png" alt="">
+                <img class="t_l_line" src="#/public/img/left_line.png" alt="">
                 <div id="chart_2" class="echart" style="width: 100%; height: 3.6rem;"></div>
-                <img class="t_r_line" src="../../../public/img/right_line.png" alt="">
+                <img class="t_r_line" src="#/public/img/right_line.png" alt="">
         </div>
         <div class="b_center_box">
-                <img class="t_l_line" src="../../../public/img/left_line.png" alt="">
+                <img class="t_l_line" src="#/public/img/left_line.png" alt="">
                 <div id="chart_1" class="echart" style="width: 100%; height: 3.6rem;"></div>
-                <img class="t_r_line" src="../../../public/img/right_line.png" alt="">
+                <img class="t_r_line" src="#/public/img/right_line.png" alt="">
         </div>
         <div class="b_right_box">
-                <img class="t_l_line" src="../../../public/img/left_line.png" alt="">
+                <img class="t_l_line" src="#/public/img/left_line.png" alt="">
                 <h1 class="t_title">设备维保数据查看</h1>
                 <table class="t_table">
                     <thead>
@@ -138,7 +138,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <img class="t_r_line" src="../../../public/img/right_line.png" alt="">
+                <img class="t_r_line" src="#/public/img/right_line.png" alt="">
         </div>
     </main>
 </div>
