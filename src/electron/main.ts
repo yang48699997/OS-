@@ -1,6 +1,5 @@
 import { app, BrowserWindow } from "electron";
 
-// 创建浏览器窗口时，调用这个函数。
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
@@ -16,6 +15,7 @@ const createWindow = () => {
     win.webContents.openDevTools();
   } else {
     win.loadFile("dist/index.html");
+    win.webContents.openDevTools();
   }
 };
 

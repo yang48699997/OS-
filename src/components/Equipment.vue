@@ -5,7 +5,7 @@
         </header>
         <main class="t_main">
             <div class="t_left_box">
-                <img class="t_l_line" src="#/public/img/left_line.png" alt="">
+                <img class="t_l_line" src="/img/left_line.png" alt="">
                 <div class="t_mbox t_rbox">
                     <i></i>
                     <span>本月设备故障数</span>
@@ -21,11 +21,11 @@
                     <span>故障损失</span>
                     <h2>1.14%</h2>
                 </div>
-                <img class="t_r_line" src="#/public/img/right_line.png" alt="">
+                <img class="t_r_line" src="/img/right_line.png" alt="">
             </div>
             <div class="t_center_box">
                 <div class="t_top_box">
-                    <img class="t_l_line" src="#/public/img/left_line.png" alt="">
+                    <img class="t_l_line" src="/img/left_line.png" alt="">
                     <ul class="t_nav">
                         <li>
                             <span>设备数</span>
@@ -42,24 +42,24 @@
                             <h1>15%</h1>
                         </li>
                     </ul>
-                    <img class="t_r_line" src="#/public/img/right_line.png" alt="">
+                    <img class="t_r_line" src="/img/right_line.png" alt="">
                 </div>
                 <div class="t_bottom_box">
-                    <img class="t_l_line" src="#/public/img/left_line.png" alt="">
+                    <img class="t_l_line" src="/img/left_line.png" alt="">
                     <div id="chart_3" class="echart" style="width: 100%; height: 3.6rem;"></div>
-                    <img class="t_r_line" src="#/public/img/right_line.png" alt="">
+                    <img class="t_r_line" src="/img/right_line.png" alt="">
                 </div>
             </div>
             <div class="t_right_box">
-                <img class="t_l_line" src="#/public/img/left_line.png" alt="">
+                <img class="t_l_line" src="/img/left_line.png" alt="">
                 <div id="chart_4" class="echart" style="width: 50%; height: 4.6rem; position: absolute;"></div>
                 <header class="t_b_h">
                     <span>异常终止次数</span>
-                    <img src="#/public/img/end.png">
+                    <img src="/img/end.png">
                     <h3>5<span>次</span></h3>
                 </header>
                 <main class="t_b_m">
-                    <img src="#/public/img/map.png" alt="">
+                    <img src="/img/map.png" alt="">
                     <div class="t_b_box">
                         <span>溫度</span>
                         <i></i>
@@ -81,20 +81,20 @@
                         <h2>250LX</h2>
                     </div>
                 </main>
-                <img class="t_r_line" src="#/public/img/right_line.png" alt="">
+                <img class="t_r_line" src="/img/right_line.png" alt="">
         </div>
         <div class="b_left_box">
-                <img class="t_l_line" src="#/public/img/left_line.png" alt="">
+                <img class="t_l_line" src="/img/left_line.png" alt="">
                 <div id="chart_2" class="echart" style="width: 100%; height: 3.6rem;"></div>
-                <img class="t_r_line" src="#/public/img/right_line.png" alt="">
+                <img class="t_r_line" src="/img/right_line.png" alt="">
         </div>
         <div class="b_center_box">
-                <img class="t_l_line" src="#/public/img/left_line.png" alt="">
+                <img class="t_l_line" src="/img/left_line.png" alt="">
                 <div id="chart_1" class="echart" style="width: 100%; height: 3.6rem;"></div>
-                <img class="t_r_line" src="#/public/img/right_line.png" alt="">
+                <img class="t_r_line" src="/img/right_line.png" alt="">
         </div>
         <div class="b_right_box">
-                <img class="t_l_line" src="#/public/img/left_line.png" alt="">
+                <img class="t_l_line" src="/img/left_line.png" alt="">
                 <h1 class="t_title">设备维保数据查看</h1>
                 <table class="t_table">
                     <thead>
@@ -138,7 +138,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <img class="t_r_line" src="#/public/img/right_line.png" alt="">
+                <img class="t_r_line" src="/img/right_line.png" alt="">
         </div>
     </main>
 </div>
@@ -823,7 +823,7 @@ a{
     width: 100%;
     height: 100%;
     min-width: 1360px;
-    background: url('../img/true.png') no-repeat;
+    background: url(/img/true.png) no-repeat;
     background-size: 100% 100%;
     position: relative;
     min-height: 756px;
@@ -831,7 +831,7 @@ a{
 .t_header{
     width: 100%;
     height: 80px;
-    background: url('../img/linx.png') no-repeat;
+    background: url(/img/linx.png) no-repeat;
     background-size: 100% 100%;
     position: relative;
 }
@@ -954,15 +954,15 @@ a{
     left: 48%;
 }
 .t_rbox i{
-    background: url(../img/indent.png) no-repeat;
+    background: url(/img/indent.png) no-repeat;
     background-size: 100% 100%;
 }
 .t_gbox i{
-    background: url(../img/vip.png) no-repeat;
+    background: url(/img/vip.png) no-repeat;
     background-size: 100% 100%;
 }
 .t_ybox i{
-    background: url(../img/consumption.png) no-repeat;
+    background: url(/img/consumption.png) no-repeat;
     background-size: 100% 100%;
 }
 .t_nav{
@@ -999,7 +999,7 @@ a{
     height: 100%;
     position: absolute;
     right: -0.2rem;
-    background: url('../img/sper.png') no-repeat;
+    background: url('/img/sper.png') no-repeat;
     background-size: 100% 100%;
 }
 .t_table{
@@ -1103,19 +1103,19 @@ a{
     left: 15%
 }
 .t_b_box i{
-    background: url('../img/t.png') no-repeat;
+    background: url('/img/t.png') no-repeat;
     background-size: 100% 100%;
 }
 .t_b_box1 i{
-    background: url('../img/s.png') no-repeat;
+    background: url('/img/s.png') no-repeat;
     background-size: 100% 100%;
 }
 .t_b_box2 i{
-    background: url('../img/j.png') no-repeat;
+    background: url('/img/j.png') no-repeat;
     background-size: 100% 100%;
 }
 .t_b_box3 i{
-    background: url('../img/g.png') no-repeat;
+    background: url('/img/g.png') no-repeat;
     background-size: 100% 100%;
 }
 .t_b_box h2,.t_b_box1 h2,.t_b_box2 h2,.t_b_box3 h2{
