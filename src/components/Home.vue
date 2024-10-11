@@ -3,10 +3,10 @@
       <div class="sidebar">
           <h2>菜单</h2>
           <ul>
-              <li><a href="#">生产调度</a></li>
-              <li><a href="/#/Equipment">设备管理</a></li>
-              <li><a href="#">库存管理</a></li>
-              <li><a href="#">数据分析</a></li>
+              <li><Router-link to="#">生产调度</Router-link></li>
+              <li><Router-link to="/Equipment">设备管理</Router-link></li>
+              <li><Router-link to="#">库存管理</Router-link></li>
+              <li><Router-link to="#">数据分析</Router-link></li>
           </ul>
       </div>
       <div class="main">
@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { RouterLink } from 'vue-router';
 
 onMounted(() => {
 
