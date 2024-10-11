@@ -4,7 +4,7 @@
           <h2>菜单</h2>
           <ul>
               <li><a href="#">生产调度</a></li>
-              <li><a href="/Equipment">设备管理</a></li>
+              <li><a href="/#/Equipment">设备管理</a></li>
               <li><a href="#">库存管理</a></li>
               <li><a href="#">数据分析</a></li>
           </ul>
