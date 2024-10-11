@@ -13,7 +13,10 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Equipment',
     component: Equipment,
   },
-  
+  {
+    path: '/:pathMatch(.*)*',
+    component : Home
+  }
 ];
 
 const router = createRouter({
