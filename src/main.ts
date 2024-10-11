@@ -10,8 +10,8 @@ import 'element-plus/dist/index.css'
 
 const app = createApp(App)
 
-app.use(createPinia()).use(router)//.use(ElementPlus)
+app.use(createPinia()).use(router) //.use(ElementPlus)
 app.use(ElementPlus, {
-    locale: zhCn,
-  })
+  locale: zhCn
+})
 app.mount('#app')
