@@ -47,7 +47,6 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
 
 onMounted(() => {})
 </script>

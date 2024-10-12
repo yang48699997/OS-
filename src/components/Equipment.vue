@@ -148,7 +148,7 @@
   </div>
 </template>
 
-<script setup lang="js">
+<script setup lang="ts">
 import { onMounted, onBeforeUnmount } from 'vue'
 import * as echarts from 'echarts'
 
@@ -234,6 +234,9 @@ const echart_2 = () => {
     yAxis: [[8, 10, 10, 11, 4, 13]],
     lines: [[10, 10, 9, 11, 7, 4]],
     barColor: ['#3FA7DC', '#7091C4', '#5170A2'], //柱子颜色 必填参数
+    barWidth: 12,
+    subTitle: '',
+    legendRight: '5%',
     lineColor: ['#D9523F'] // 折线颜色
   }
   /////////////end/////////
@@ -244,8 +247,8 @@ const echart_2 = () => {
     var legendBar = data.legendBar || []
     var legendLine = data.legendLine || []
     var symbol = data.symbol || ' '
-    var seriesArr = []
-    var legendArr = []
+    var seriesArr: any = []
+    var legendArr: any = []
     yAxis &&
       yAxis.forEach((item, index) => {
         legendArr.push({
@@ -332,7 +335,7 @@ const echart_2 = () => {
     },
     tooltip: {
       trigger: 'axis',
-      formatter: function (params) {
+      formatter: (params: any) => {
         var time = ''
         var str = ''
         for (var i of params) {
@@ -340,7 +343,7 @@ const echart_2 = () => {
           if (i.data == 'null' || i.data == null) {
             str += i.seriesName + '：无数据' + '<br/>'
           } else {
-            str += i.seriesName + '：' + i.data + symbol + '%<br/>'
+            str += i.seriesName + '：' + i.data + Symbol + '%<br/>'
           }
         }
         return time + str
@@ -352,7 +355,6 @@ const echart_2 = () => {
     legend: {
       right: data.legendRight || '30%',
       top: '12%',
-      right: '5%',
       itemGap: 16,
       itemWidth: 10,
       itemHeight: 10,
@@ -401,7 +403,7 @@ const echart_2 = () => {
             align: 'center'
           }
         },
-        formatter: function (params, index) {
+        formatter: (params: any, index: any) => {
           var newParamsName = ''
           var splitNumber = 5
           var paramsNameNumber = params && params.length
@@ -480,10 +482,10 @@ const echart_3 = () => {
   var option
 
   let noise = getNoiseHelper()
-  let xData = []
-  let yData = []
+  let xData: number[] = []
+  let yData: number[] = []
   noise.seed(Math.random())
-  function generateData(theta, min, max) {
+  function generateData(theta: number, min: number, max: number) {
     let data = []
     for (let i = 0; i <= 200; i++) {
       for (let j = 0; j <= 100; j++) {
@@ -554,15 +556,18 @@ const echart_3 = () => {
   }
   function getNoiseHelper() {
     class Grad {
-      constructor(x, y, z) {
+      x: number
+      y: number
+      z: number
+      constructor(x: number, y: number, z: number) {
         this.x = x
         this.y = y
         this.z = z
       }
-      dot2(x, y) {
+      dot2(x: number, y: number) {
         return this.x * x + this.y * y
       }
-      dot3(x, y, z) {
+      dot3(x: number, y: number, z: number) {
         return this.x * x + this.y * y + this.z * z
       }
     }
@@ -597,7 +602,7 @@ const echart_3 = () => {
     ]
     let perm = new Array(512)
     let gradP = new Array(512)
-    function seed(seed) {
+    function seed(seed: number) {
       if (seed > 0 && seed < 1) {
         seed *= 65536
       }
@@ -617,13 +622,13 @@ const echart_3 = () => {
       }
     }
     seed(0)
-    function fade(t) {
+    function fade(t: number) {
       return t * t * t * (t * (t * 6 - 15) + 10)
     }
-    function lerp(a, b, t) {
+    function lerp(a: number, b: number, t: number) {
       return (1 - t) * a + t * b
     }
-    function perlin2(x, y) {
+    function perlin2(x: number, y: number) {
       let X = Math.floor(x),
         Y = Math.floor(y)
       x = x - X
@@ -692,7 +697,7 @@ const echart_4 = () => {
         },
         axisLabel: {
           color: '#fff',
-          formatter: (value, index) => {
+          formatter: (value: number, index: number) => {
             return [`{lg|${index + 1}}  ` + '{title|' + value + '} '].join('\n')
           },
           rich: {
@@ -739,7 +744,7 @@ const echart_4 = () => {
         itemStyle: {
           normal: {
             barBorderRadius: 20,
-            color: function (params) {
+            color: function (params: any) {
               var num = myColor.length
               return myColor[params.dataIndex % num]
             }
