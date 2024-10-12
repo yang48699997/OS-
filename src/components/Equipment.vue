@@ -247,8 +247,8 @@ const echart_2 = () => {
     var legendBar = data.legendBar || []
     var legendLine = data.legendLine || []
     var symbol = data.symbol || ' '
-    var seriesArr: any = []
-    var legendArr: any = []
+    var seriesArr: {}[] = []
+    var legendArr: { name: string | boolean }[] = []
     yAxis &&
       yAxis.forEach((item, index) => {
         legendArr.push({
@@ -335,7 +335,7 @@ const echart_2 = () => {
     },
     tooltip: {
       trigger: 'axis',
-      formatter: (params: any) => {
+      formatter: (params: { name: string; data: string; seriesName: string }[]) => {
         var time = ''
         var str = ''
         for (var i of params) {
@@ -403,7 +403,7 @@ const echart_2 = () => {
             align: 'center'
           }
         },
-        formatter: (params: any, index: any) => {
+        formatter: (params: any, index: number) => {
           var newParamsName = ''
           var splitNumber = 5
           var paramsNameNumber = params && params.length
@@ -744,7 +744,7 @@ const echart_4 = () => {
         itemStyle: {
           normal: {
             barBorderRadius: 20,
-            color: function (params: any) {
+            color: function (params: { dataIndex: number }) {
               var num = myColor.length
               return myColor[params.dataIndex % num]
             }
