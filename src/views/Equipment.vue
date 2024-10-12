@@ -110,35 +110,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>{{ time }}</td>
-              <td>{{ name }}</td>
-              <td>{{ phone_number }}</td>
-              <td>{{ record }}</td>
-            </tr>
-            <tr>
-              <td>{{ time }}</td>
-              <td>{{ name }}</td>
-              <td>{{ phone_number }}</td>
-              <td>{{ record }}</td>
-            </tr>
-            <tr>
-              <td>{{ time }}</td>
-              <td>{{ name }}</td>
-              <td>{{ phone_number }}</td>
-              <td>{{ record }}</td>
-            </tr>
-            <tr>
-              <td>{{ time }}</td>
-              <td>{{ name }}</td>
-              <td>{{ phone_number }}</td>
-              <td>{{ record }}</td>
-            </tr>
-            <tr>
-              <td>{{ time }}</td>
-              <td>{{ name }}</td>
-              <td>{{ phone_number }}</td>
-              <td>{{ record }}</td>
+            <tr v-for="(item, index) in maintenanceRecords" :key="index">
+              <td>{{ item.time }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.phone_number }}</td>
+              <td>{{ item.record }}</td>
             </tr>
           </tbody>
         </table>
@@ -160,6 +136,14 @@ const name = '羊桑'
 const phone_number = 11012013011
 const time = '2024-10-02'
 const record = '正常'
+const maintenanceRecords = [
+  {
+    name,
+    time,
+    phone_number,
+    record
+  }
+]
 
 const setFontSize = () => {
   const whdef = 100 / 1920
