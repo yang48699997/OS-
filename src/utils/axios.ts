@@ -1,4 +1,3 @@
-// src/axios.ts
 import axios from 'axios'
 import JSONbig from 'json-bigint'
 
