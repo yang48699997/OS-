@@ -142,6 +142,24 @@ const maintenanceRecords = [
     time,
     phone_number,
     record
+  },
+  {
+    name,
+    time,
+    phone_number,
+    record
+  },
+  {
+    name,
+    time,
+    phone_number,
+    record
+  },
+  {
+    name,
+    time,
+    phone_number,
+    record
   }
 ]
 
