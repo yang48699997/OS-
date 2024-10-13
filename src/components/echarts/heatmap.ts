@@ -1,9 +1,6 @@
 import { init } from 'echarts'
 const heatmap = () => {
   // 基于准备好的dom，初始化echarts实例
-
-  var app = {}
-
   var chartDom = document.getElementById('heatmap')
   var myChart = init(chartDom)
   var option

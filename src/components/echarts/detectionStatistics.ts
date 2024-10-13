@@ -1,8 +1,8 @@
 import { init } from 'echarts'
 const detectionStatistics = () => {
   // 基于准备好的dom，初始化echarts实例
-  var myChart = init(document.getElementById('detectionStatistics'))
-  var data = {
+  const myChart = init(document.getElementById('detectionStatistics'))
+  const data = {
     id: 'multipleBarsLines',
     title: '2024年前半年检测统计',
     legendBar: ['正面占比', '中立占比', '负面占比'],
@@ -19,25 +19,25 @@ const detectionStatistics = () => {
   }
   /////////////end/////////
 
-  var myData = (function test() {
-    var yAxis = data.yAxis || []
-    var lines = data.lines || []
-    var legendBar = data.legendBar || []
-    var legendLine = data.legendLine || []
-    var symbol = data.symbol || ' '
-    var seriesArr: {}[] = []
-    var legendArr: { name: string | boolean }[] = []
+  const myData = (() => {
+    const yAxis = data.yAxis ?? []
+    const lines = data.lines ?? []
+    const legendBar = data.legendBar ?? []
+    const legendLine = data.legendLine ?? []
+    const symbol = data.symbol ?? ' '
+    const seriesArr: {}[] = []
+    const legendArr: { name: string | boolean }[] = []
     yAxis &&
       yAxis.forEach((item, index) => {
         legendArr.push({
-          name: legendBar && legendBar.length > 0 && legendBar[index]
+          name: legendBar?.[index] ?? ''
         })
         seriesArr.push({
-          name: legendBar && legendBar.length > 0 && legendBar[index],
+          name: legendBar?.[index] ?? '',
           type: 'bar',
           barGap: '0.5px',
           data: item,
-          barWidth: data.barWidth || 12,
+          barWidth: data.barWidth ?? 12,
           label: {
             normal: {
               show: true,
@@ -65,10 +65,10 @@ const detectionStatistics = () => {
     lines &&
       lines.forEach((item, index) => {
         legendArr.push({
-          name: legendLine && legendLine.length > 0 && legendLine[index]
+          name: legendLine?.[index] ?? ''
         })
         seriesArr.push({
-          name: legendLine && legendLine.length > 0 && legendLine[index],
+          name: legendLine?.[index] ?? '',
           type: 'line',
           data: item,
           itemStyle: {
@@ -121,7 +121,7 @@ const detectionStatistics = () => {
           if (i.data == 'null' || i.data == null) {
             str += i.seriesName + '：无数据' + '<br/>'
           } else {
-            str += i.seriesName + '：' + i.data + Symbol + '%<br/>'
+            str += i.seriesName + '：' + i.data + '%<br/>'
           }
         }
         return time + str
@@ -131,7 +131,7 @@ const detectionStatistics = () => {
       }
     },
     legend: {
-      right: data.legendRight || '30%',
+      right: data.legendRight ?? '30%',
       top: '12%',
       itemGap: 16,
       itemWidth: 10,
@@ -184,17 +184,13 @@ const detectionStatistics = () => {
         formatter: (params: any, index: number) => {
           var newParamsName = ''
           var splitNumber = 5
-          var paramsNameNumber = params && params.length
-          if (paramsNameNumber && paramsNameNumber <= 4) {
-            splitNumber = 4
-          } else if (paramsNameNumber >= 5 && paramsNameNumber <= 7) {
-            splitNumber = 4
-          } else if (paramsNameNumber >= 8 && paramsNameNumber <= 9) {
-            splitNumber = 5
-          } else if (paramsNameNumber >= 10 && paramsNameNumber <= 14) {
-            splitNumber = 5
-          } else {
-            params = params && params.slice(0, 15)
+          const paramsNameNumber = params?.length
+          if (paramsNameNumber) {
+            if (paramsNameNumber <= 7) {
+              splitNumber = 4
+            } else if (paramsNameNumber > 14) {
+              params = params.slice(0, 15)
+            }
           }
 
           var provideNumber = splitNumber //一行显示几个字

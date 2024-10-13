@@ -126,42 +126,18 @@
 
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount } from 'vue'
-import * as echarts from 'echarts'
 import { deviceStatus } from '@/components/echarts/deviceStatus'
 import { detectionStatistics } from '@/components/echarts/detectionStatistics'
 import { heatmap } from '@/components/echarts/heatmap'
 import { useFrequency } from '@/components/echarts/useFrequency'
 
-const name = '羊桑'
-const phone_number = 11012013011
-const time = '2024-10-02'
-const record = '正常'
-const maintenanceRecords = [
-  {
-    name,
-    time,
-    phone_number,
-    record
-  },
-  {
-    name,
-    time,
-    phone_number,
-    record
-  },
-  {
-    name,
-    time,
-    phone_number,
-    record
-  },
-  {
-    name,
-    time,
-    phone_number,
-    record
-  }
-]
+const table_data = {
+  name: '羊桑',
+  phone_number: 11012013011,
+  time: '2024-10-02',
+  record: '正常'
+}
+const maintenanceRecords = [table_data, table_data, table_data, table_data]
 
 const setFontSize = () => {
   const whdef = 100 / 1920
@@ -173,7 +149,6 @@ const setFontSize = () => {
 onMounted(() => {
   setFontSize() // 初始化字体大小
   window.addEventListener('resize', setFontSize) // 绑定窗口调整事件
-
   deviceStatus()
   detectionStatistics()
   heatmap()
