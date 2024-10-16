@@ -1,138 +1,432 @@
 <template>
   <div class="container">
-    <div class="sidebar">
-      <h2>菜单</h2>
-      <ul>
-        <li><Router-link to="#">生产调度</Router-link></li>
-        <li><Router-link to="/Equipment">设备管理</Router-link></li>
-        <li><Router-link to="#">库存管理</Router-link></li>
-        <li><Router-link to="#">数据分析</Router-link></li>
-      </ul>
-    </div>
+    <MenuSiderbar />
     <div class="main">
-      <div class="header">
-        <div class="user-info">
-          <span>User: Admin</span>
-        </div>
-        <div class="system-info">
-          <span>System Time: 12:45 PM</span>
+      <UserInfo />
+      <h2>生产进度</h2>
+      <div class="progress">
+        <div v-for="(line, index) in progressLines.slice().reverse()" :key="index" class="progress-item">
+          {{ line }}
         </div>
       </div>
-      <div class="dashboard">
-        <div class="dashboard-section task-progress">
-          <h3>Current Task Progress</h3>
-          <p>Task 1: 80% complete</p>
-          <p>Task 2: 40% complete</p>
-          <button>Update Task Status</button>
+      <div class="gantt-chart">
+        <span>生产线A:</span>
+        <div
+          v-for="(order, index) in orderProgress"
+          :key="index"
+          class="gantt-item"
+          :style="{ width: order.duration + 'px', backgroundColor: getOrderColor(order) }"
+          @mouseover="showOrderDetails(order)"
+          @mouseleave="hideOrderDetails"
+        >
         </div>
-        <div class="dashboard-section equipment-status">
-          <h3>Equipment Status</h3>
-          <p>Status: Running</p>
-          <button>Stop Equipment</button>
+      </div>
+      <div class="gantt-chart">
+        <span>生产线B:</span>
+        <div
+          v-for="(order, index) in orderProgress2"
+          :key="index"
+          class="gantt-item"
+          :style="{ width: order.duration + 'px', backgroundColor: getOrderColor(order) }"
+          @mouseover="showOrderDetails(order)"
+          @mouseleave="hideOrderDetails"
+        >
         </div>
-        <div class="dashboard-section quality-monitoring">
-          <h3>Quality Monitoring</h3>
-          <p>Quality metrics are within the accepted range.</p>
-          <button>Trigger Alarm</button>
+      </div>
+      <div class="gantt-chart">
+        <span>生产线C:</span>
+        <div
+          v-for="(order, index) in orderProgress3"
+          :key="index"
+          class="gantt-item"
+          :style="{ width: order.duration + 'px', backgroundColor: getOrderColor(order) }"
+          @mouseover="showOrderDetails(order)"
+          @mouseleave="hideOrderDetails"
+        >
         </div>
-        <div class="dashboard-section inventory-management">
-          <h3>Inventory Management</h3>
-          <p>Raw Material A: 120 units</p>
-          <button>Update Inventory</button>
-        </div>
+      </div>
+      <div class="controls">
+        <!-- <button class="start-button" @click="">开始调度</button> -->
+        <button class="reset-button" @click="resetProgress">清除</button>
+      </div>
+      <div class="info-box" v-if="hoveredOrder">
+        <h3>订单详细信息</h3>
+        <p>订单名称: {{ hoveredOrder.name }}</p>
+        <p>持续时间: {{ hoveredOrder.duration }} 分钟</p>
+        <p>开始时间: {{ hoveredOrder.start }} 分钟</p>
+        <p>结束时间: {{ hoveredOrder.end }} 分钟</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
+import MenuSiderbar from './MenuSiderbar.vue';
+import UserInfo from './UserInfo.vue';
 
-onMounted(() => {})
+interface Order {
+  id: number;
+  model: string;
+  priority: number;
+  quantity: number;
+  status: string;
+  semaphore: number;
+}
+
+interface OrderImpl {
+  id: number;
+  need: number;
+  turn: number;
+  cur: number;
+  tot: number;
+  model: string;
+  start: number;
+  priority: number;
+}
+
+interface ProcessStep {
+  name: string; 
+  description: string; 
+  materials: string[]; 
+  product: string; 
+  time: number; 
+  machine: string; 
+}
+
+interface AssemblyLine {
+  type: string;
+  process: ProcessStep[]; 
+  totalTime: number;
+}
+
+interface OrderProgress {
+  name: string; 
+  duration: number; 
+  start: number; 
+  end: number; 
+  id: number;
+}
+
+const orders = ref<Order[]>(JSON.parse(localStorage.getItem('orders') || '[]'));
+const lines = ref<AssemblyLine[]>(JSON.parse(localStorage.getItem('lines') || '[]'));
+
+const progressLines = ref<string[]>(JSON.parse(localStorage.getItem('progressLines') || '[]'));
+const orderProgress = ref<OrderProgress[]>(JSON.parse(localStorage.getItem('orderProgress') || '[]'));
+const orderProgress2 = ref<OrderProgress[]>(JSON.parse(localStorage.getItem('orderProgress2') || '[]'));
+const orderProgress3 = ref<OrderProgress[]>(JSON.parse(localStorage.getItem('orderProgress3') || '[]'));
+const hoveredOrder = ref<{ name: string; duration: number; start: number; end: number } | null>(null);
+let sum = Number(localStorage.getItem('time')) || 0;
+
+const updateLocalStorage = () => {
+  localStorage.setItem('orders', JSON.stringify(orders.value));
+  localStorage.setItem('progressLines', JSON.stringify(progressLines.value));
+  localStorage.setItem('orderProgress', JSON.stringify(orderProgress.value));
+  localStorage.setItem('orderProgress2', JSON.stringify(orderProgress2.value));
+  localStorage.setItem('orderProgress3', JSON.stringify(orderProgress3.value));
+  localStorage.setItem('time', JSON.stringify(sum));
+};
+
+const resetProgress = () => {
+  progressLines.value = [];
+  orderProgress.value = [];
+  orderProgress2.value = [];
+  orderProgress3.value = [];
+  hoveredOrder.value = null;
+  sum = 0;
+  localStorage.setItem('progressLines', JSON.stringify(progressLines.value));
+  localStorage.setItem('orderProgress', JSON.stringify(orderProgress.value));
+  localStorage.setItem('orderProgress2', JSON.stringify(orderProgress2.value));
+  localStorage.setItem('orderProgress3', JSON.stringify(orderProgress3.value));
+  localStorage.setItem('time', JSON.stringify(sum));
+};
+
+const startProgress = (machine: string, p: number) => {
+  progressLines.value = (JSON.parse(localStorage.getItem('progressLines') || '[]'));
+  orderProgress.value = (JSON.parse(localStorage.getItem('orderProgress') || '[]'));
+  orderProgress2.value = (JSON.parse(localStorage.getItem('orderProgress2') || '[]'));
+  orderProgress3.value = (JSON.parse(localStorage.getItem('orderProgress3') || '[]'));
+  const queues: OrderImpl[][] = [[], [], [], [], [], [], [], [], [], []];
+  const queue: OrderImpl[] = [];
+
+  orders.value.forEach(order => {
+    if (order.status != '已完成' && order.semaphore === p) {
+      const assemblyLine = lines.value.find(line => line.type === order.model);
+      const priorityIndex = Math.min(order.priority, 5);
+      if (assemblyLine) {
+        const orderImpl = ref<OrderImpl>({
+          id: order.id,
+          need: assemblyLine.totalTime,
+          turn: 0,
+          cur: 0,
+          tot: assemblyLine.process.length,
+          model: assemblyLine.type,
+          start: sum,
+          priority: order.priority
+        });
+        queues[priorityIndex].push(orderImpl.value);
+      } else {
+        console.error(`找不到与模型 ${order.model} 匹配的生产线`);
+      }
+    }
+  });
+
+  const timeSlice = 20; 
+  let currentQueueIndex = 0;
+  
+
+  const processNextOrder = () => {
+    while (currentQueueIndex < queues.length && queues[currentQueueIndex].length === 0) {
+      currentQueueIndex++;
+    }
+
+    if (currentQueueIndex >= queues.length) {
+      progressLines.value.push(`${ machine } 所有订单已完成！`);
+      return;
+    }
+
+    let currentQueue = queues[currentQueueIndex];
+    let order = currentQueue.shift();
+    let ok = 1
+    for (let i = queues.length - 1; i > currentQueueIndex && ok; i--) {
+      for (let j = 0; j < queues[i].length && ok; j++) {
+        if (queues[i][j].start <= sum - queues[i][j].priority) {
+          if (order) queues[currentQueueIndex].push(order);
+          order = queues[i][j]
+          ok = 0
+          let l = j
+          while (l--) {
+            const tmp = queues[i].shift();
+            if (tmp) queues[i].push(tmp)
+          }
+          order = queues[i].shift();
+        }
+      }
+    }
+    if (queue.length > 0 && queue[0].start <= sum - queue[0].priority * 100) {
+      if (order) queues[currentQueueIndex].push(order)
+      order = queue[0]
+    }
+
+    if (order) {
+      const assemblyLine = lines.value.find(line => line.type === order.model);
+      let left = timeSlice * (currentQueueIndex + 1);
+      if (currentQueueIndex === 0) left = 1000000
+      console.log(left)
+      if (assemblyLine) {
+        const processStep = () => {
+          if (order.cur < order.tot && left > 0) {
+            const currentProcess = assemblyLine.process[order.cur];
+            if (left >= currentProcess.time) {
+              if (p === 1) orderProgress.value.push({
+                name: `订单 ${order.id}`,
+                duration: currentProcess.time,
+                start: sum,
+                end: sum + currentProcess.time,
+                id: order.id
+              });
+              if (p === 2) orderProgress2.value.push({
+                name: `订单 ${order.id}`,
+                duration: currentProcess.time,
+                start: sum,
+                end: sum + currentProcess.time,
+                id: order.id
+              });
+              if (p === 3) orderProgress3.value.push({
+                name: `订单 ${order.id}`,
+                duration: currentProcess.time,
+                start: sum,
+                end: sum + currentProcess.time,
+                id: order.id
+              });
+              left -= currentProcess.time;
+              sum += currentProcess.time;
+              progressLines.value.push(`${machine} 正在处理订单 ${order.id} 的工序 "${currentProcess.name}"...`);
+              setTimeout(() => {
+                progressLines.value.push(`${machine} 耗时 ${currentProcess.time} 分钟, 已完成, 产出 "${currentProcess.product}" X 1`);
+                order.cur++;
+                processStep();
+              }, currentProcess.time * 50);
+            } else {
+              if (p === 1) orderProgress.value.push({
+                name: `订单 ${order.id}`,
+                duration: currentProcess.time,
+                start: sum,
+                end: sum + currentProcess.time,
+                id: order.id
+              });
+              if (p === 2) orderProgress2.value.push({
+                name: `订单 ${order.id}`,
+                duration: currentProcess.time,
+                start: sum,
+                end: sum + currentProcess.time,
+                id: order.id
+              });
+              if (p === 3) orderProgress3.value.push({
+                name: `订单 ${order.id}`,
+                duration: currentProcess.time,
+                start: sum,
+                end: sum + currentProcess.time,
+                id: order.id
+              });
+              sum += left;
+              progressLines.value.push(`${machine} 正在处理订单 ${order.id} 的工序 "${currentProcess.name}"...`);
+              setTimeout(() => {
+                progressLines.value.push(`${machine} 耗时 ${left} 分钟, 部分完成, 已加入到下级队列`);
+                left = 0;
+                if (currentQueueIndex === 0) queues[0].push(order);
+                else {
+                  queues[Math.min(queues.length - 1, currentQueueIndex + 1)].push(order);
+                }
+                processNextOrder();
+              }, left * 50);
+            }
+          } else if (order.cur === order.tot) {
+            order.turn = sum;
+            processNextOrder();
+            orders.value.forEach(order => {
+              if (order.id === order.id) {
+                order.status = '已完成';
+                updateLocalStorage();
+              }
+            });
+          } else {
+            if (currentQueueIndex === 0) queues[0].push(order);
+            else {
+              queues[Math.min(queues.length - 1, currentQueueIndex + 1)].push(order);
+            }
+            processNextOrder();
+          }
+        };
+        updateLocalStorage();
+        processStep();
+      }
+    }
+  };
+  processNextOrder();
+};
+
+
+const getOrderColor = (order: { name: string; duration: number; start: number; end: number; id: number }) => {
+  const colors = [
+  '#4CAF50', '#2196F3', '#FFC107', '#FF5722', '#9C27B0',
+  '#E91E63', '#3F51B5', '#FF9800', '#9E9E9E', '#607D8B',
+  '#FFEB3B', '#8BC34A', '#FF5722', '#673AB7', '#CDDC39',
+  '#FF4081', '#00BCD4', '#009688', '#795548', '#F44336',
+  '#2196F3', '#3F51B5', '#8BC34A', '#FF9800', '#FFEB3B',
+  '#FF5722', '#E91E63', '#9C27B0', '#673AB7', '#FFC107',
+  '#CDDC39'
+];
+  return colors[order.id % colors.length]; 
+};
+
+const showOrderDetails = (order: { name: string; duration: number; start: number; end: number }) => {
+  hoveredOrder.value = order; 
+};
+
+const hideOrderDetails = () => {
+  hoveredOrder.value = null; 
+};
+
+onMounted(() => {
+  startProgress("生产线A", 1);
+  startProgress("生产线B", 2);
+  startProgress("生产线C", 3);
+});
+
+
 </script>
 
 <style scoped>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background-color: #f4f7fc;
-}
 .container {
   display: flex;
-  height: 100vh;
+  height: 120vh;
+  background-color: #f7f7f7;
 }
-.sidebar {
-  width: 250px;
-  background-color: #1f2b49;
-  padding: 20px;
-  color: white;
-}
-.sidebar h2 {
-  color: #a8b9d6;
-}
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
-.sidebar ul li {
-  margin: 20px 0;
-  font-size: 18px;
-}
-.sidebar ul li a {
-  color: #fff;
-  text-decoration: none;
-}
+
 .main {
   flex-grow: 1;
   padding: 20px;
-  background-color: #f4f7fc;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-left: 20px;
+  max-width: 1000px;
+  margin: 20px auto;
 }
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  padding: 10px 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+.progress {
+  margin: 20px 0;
+  max-height: 300px;
+  overflow-y: auto;
 }
-.header .user-info {
-  display: flex;
-  align-items: center;
+
+.progress-item {
+  background-color: #e7f3fe;
+  border-left: 5px solid #2196F3;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  animation: fadeIn 0.5s;
 }
-.header .user-info span {
-  margin-left: 10px;
-}
-.dashboard {
+
+.gantt-chart {
+  display: flex; 
   margin-top: 20px;
 }
-.dashboard-section {
-  background-color: white;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+
+.gantt-item {
+  height: 30px; 
+  margin-right: 1px; 
+  border-radius: 4px; 
+  color: white; 
+  text-align: center; 
+  line-height: 30px; 
 }
-.dashboard-section h3 {
-  margin-bottom: 10px;
-  font-size: 20px;
-}
-.task-progress,
-.equipment-status,
-.quality-monitoring,
-.inventory-management {
+
+.controls {
+  margin-top: 20px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
 }
-button {
-  padding: 10px 15px;
-  margin-top: 10px;
-  background-color: #1f77d0;
-  color: white;
+
+.start-button,
+.reset-button {
+  padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
 }
-button:disabled {
-  background-color: #ccc;
+
+.start-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.reset-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.info-box {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.info-box h3 {
+  margin-top: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>
