@@ -30,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/AssemblyLine',
     name: 'AssemblyLine',
     component: AssemblyLine
-  },
+  }
 ]
 
 const router = createRouter({

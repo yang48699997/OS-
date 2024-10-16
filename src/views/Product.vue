@@ -49,8 +49,12 @@
               <td>{{ order.quantity }}</td>
               <td>{{ order.status }}</td>
               <td>
-                <button class="btn cancel-btn" @click="confirmCancelOrder(order.id)">取消订单</button>
-                <button class="btn delete-btn" @click="confirmDeleteOrder(order.id)">删除记录</button>
+                <button class="btn cancel-btn" @click="confirmCancelOrder(order.id)">
+                  取消订单
+                </button>
+                <button class="btn delete-btn" @click="confirmDeleteOrder(order.id)">
+                  删除记录
+                </button>
               </td>
             </tr>
           </tbody>
@@ -67,7 +71,7 @@
       <div class="log">
         <h2>日志</h2>
         <ul>
-          <li v-for="(entry) in visibleLogEntries" :key="entry.id">
+          <li v-for="entry in visibleLogEntries" :key="entry.id">
             {{ entry.message }} (时间: {{ entry.timestamp }})
           </li>
         </ul>
@@ -81,143 +85,170 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import MenuSiderbar from './MenuSiderbar.vue'; 
-import UserInfo from './UserInfo.vue';
+import { ref, onMounted } from 'vue'
+import MenuSiderbar from './MenuSiderbar.vue'
+import UserInfo from './UserInfo.vue'
+import { db } from '@/utils/db'
 
-
-interface Order {
-  id: number;
-  model: string;
-  priority: number; 
-  quantity: number;
-  status: string;
-  semaphore: number;
+export interface Order {
+  id: number
+  model: string
+  priority: number
+  quantity: number
+  status: string
+  semaphore: number
 }
-interface LogEntry {
-  id: number;
-  message: string;
-  timestamp: string;
+export interface LogEntry {
+  id: number
+  message: string
+  timestamp: string
 }
-const orders = ref<Order[]>(JSON.parse(localStorage.getItem('orders') || '[]') || [
-  { id: 1, model: '轿车', priority: 5, quantity: 10, status: '待生产' },
-  { id: 2, model: 'SUV', priority: 3, quantity: 5, status: '待生产' },
-  { id: 3, model: 'MPV', priority: 1, quantity: 3, status: '待生产' },
-]);
-const scheduledOrders = ref<Order[]>([]);
-const logEntries = ref<LogEntry[]>(JSON.parse(localStorage.getItem('logEntries') || '[]') || []);
+const orders = ref<Order[]>([])
+db.data
+  .where('id')
+  .equals(0)
+  .toArray()
+  .then((resolve) => {
+    const ans = resolve[0]
+    orders.value = JSON.parse(ans.order ?? '')
+  })
+const scheduledOrders = ref<Order[]>([])
+const logEntries = ref<LogEntry[]>([])
+db.data
+  .where('id')
+  .equals(0)
+  .toArray()
+  .then((resolve) => {
+    const ans = resolve[0]
+    logEntries.value = JSON.parse(ans.log ?? '')
+  })
+const newOrderModel = ref<string>('')
+const newOrderPriority = ref<number>(0)
+const newOrderQuantity = ref<number>(1)
+const isExpanded = ref(false)
+const logLimit = 8
+const visibleLogEntries = ref<LogEntry[]>([])
+const showMore = ref(true)
 
-const newOrderModel = ref<string>('');
-const newOrderPriority = ref<number>(0);
-const newOrderQuantity = ref<number>(1);
-const isExpanded = ref(false);
-const logLimit = 8; 
-const visibleLogEntries = ref<LogEntry[]>([]);
-const showMore = ref(true);
-
-let now = Number(localStorage.getItem('now'))
+let now = 0
+db.data
+  .where('id')
+  .equals(0)
+  .toArray()
+  .then((resolve) => {
+    const ans = resolve[0]
+    now = ans.now ?? 0
+  })
 function getRandomInt() {
-  let min = 1;
-  let max = 1000000000;
-  return max + Math.floor(Math.random() * (max - min + 1)) + min;
+  let min = 1
+  let max = 1000000000
+  return max + Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 const addOrder = (): void => {
   if (newOrderModel.value.trim() === '') {
-    alert('车型不能为空');
-    return;
+    alert('车型不能为空')
+    return
   }
   if (newOrderPriority.value < 0 || newOrderPriority.value > 10) {
-    alert('优先级必须在0到10之间');
-    return;
+    alert('优先级必须在0到10之间')
+    return
   }
   if (newOrderQuantity.value <= 0) {
-    alert('数量必须大于零');
-    return;
+    alert('数量必须大于零')
+    return
   }
-  const newId = getRandomInt();
+  const newId = getRandomInt()
   const newOrder: Order = {
     id: newId,
     model: newOrderModel.value,
     priority: newOrderPriority.value,
     quantity: newOrderQuantity.value,
     status: '待生产',
-    semaphore: now % 3 + 1
-  };
-  now++;
-  localStorage.setItem('now', JSON.stringify(now))
-  orders.value.push(newOrder);
-  updateLocalStorage();
+    semaphore: (now % 3) + 1
+  }
+  now++
+  db.data.update(0, {
+    now: now
+  })
+  orders.value.push(newOrder)
+  updateDb()
   logEntries.value.push({
     id: logEntries.value.length + 1,
     message: `增加订单: ${newOrder.model}，优先级: ${newOrder.priority}，数量: ${newOrder.quantity}`,
     timestamp: new Date().toLocaleString()
-  });
+  })
   if (logEntries.value.length > 100) {
-    logEntries.value.shift();
+    logEntries.value.shift()
   }
-  logEntries.value.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  updateLogLocalStorage();
-  newOrderModel.value = '';
-  newOrderPriority.value = 0;
-  newOrderQuantity.value = 1; 
-  updateVisibleLogEntries();
-};
+  logEntries.value.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+  updateLogLocalStorage()
+  newOrderModel.value = ''
+  newOrderPriority.value = 0
+  newOrderQuantity.value = 1
+  updateVisibleLogEntries()
+}
 const confirmCancelOrder = (id: number): void => {
   if (confirm('确定要取消此订单吗？')) {
-    cancelOrder(id);
+    cancelOrder(id)
   }
-};
+}
 const confirmDeleteOrder = (id: number): void => {
-    cancelOrder(id);
-};
+  cancelOrder(id)
+}
 const cancelOrder = (id: number): void => {
-  const orderIndex = orders.value.findIndex(order => order.id === id);
+  const orderIndex = orders.value.findIndex((order) => order.id === id)
   if (orderIndex !== -1) {
-    const canceledOrder = orders.value[orderIndex];
-    orders.value.splice(orderIndex, 1);
-    updateLocalStorage();
+    const canceledOrder = orders.value[orderIndex]
+    orders.value.splice(orderIndex, 1)
+    updateDb()
     logEntries.value.push({
       id: logEntries.value.length + 1,
       message: `取消订单: ${canceledOrder.model}，订单编号: ${canceledOrder.id}`,
       timestamp: new Date().toLocaleString()
-    });
+    })
     if (logEntries.value.length > 100) {
-      logEntries.value.shift();
+      logEntries.value.shift()
     }
-    logEntries.value.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    updateLogLocalStorage();
-    updateVisibleLogEntries();
+    logEntries.value.sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    )
+    updateLogLocalStorage()
+    updateVisibleLogEntries()
   }
-};
-const updateLocalStorage = () => {
-  localStorage.setItem('orders', JSON.stringify(orders.value));
-};
+}
+const updateDb = () => {
+  db.data.update(0, {
+    order: JSON.stringify(orders.value)
+  })
+}
 const updateLogLocalStorage = () => {
-  localStorage.setItem('logEntries', JSON.stringify(logEntries.value));
-};
+  db.data.update(0, {
+    log: JSON.stringify(logEntries.value)
+  })
+}
 onMounted(() => {
-  logEntries.value.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  updateVisibleLogEntries();
-});
+  logEntries.value.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+  updateVisibleLogEntries()
+})
 const updateVisibleLogEntries = () => {
   if (isExpanded.value) {
-    visibleLogEntries.value = logEntries.value;
+    visibleLogEntries.value = logEntries.value
   } else {
-    visibleLogEntries.value = logEntries.value.slice(0, logLimit);
+    visibleLogEntries.value = logEntries.value.slice(0, logLimit)
   }
-};
+}
 const toggleLogVisibility = () => {
-  isExpanded.value = !isExpanded.value;
-  updateVisibleLogEntries();
-};
+  isExpanded.value = !isExpanded.value
+  updateVisibleLogEntries()
+}
 const clearLogs = () => {
   if (confirm('确定要清除所有日志吗？')) {
-    logEntries.value = [];
-    updateLogLocalStorage();
-    updateVisibleLogEntries();
+    logEntries.value = []
+    updateLogLocalStorage()
+    updateVisibleLogEntries()
   }
-};
+}
 </script>
 
 <style scoped>
@@ -276,7 +307,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 15px;
   text-align: left;
   border-bottom: 1px solid #ddd;

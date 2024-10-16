@@ -4,7 +4,7 @@
       <slot name="header">
         <h2>{{ title }}</h2>
       </slot>
-      <slot></slot> 
+      <slot></slot>
       <div class="modal-actions">
         <button class="btn" @click="confirm">确定</button>
         <button class="btn" @click="cancel">取消</button>
@@ -14,25 +14,25 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits } from 'vue'
 
 const props = defineProps<{
-  title: string;
-  visible: boolean;
-}>();
+  title: string
+  visible: boolean
+}>()
 
 const emit = defineEmits<{
-  (e: 'confirm'): void;
-  (e: 'cancel'): void;
-}>();
+  (e: 'confirm'): void
+  (e: 'cancel'): void
+}>()
 
 const confirm = () => {
-  emit('confirm');
-};
+  emit('confirm')
+}
 
 const cancel = () => {
-  emit('cancel');
-};
+  emit('cancel')
+}
 </script>
 
 <style scoped>
@@ -50,21 +50,21 @@ const cancel = () => {
 
 .modal-content {
   background: white;
-  padding: 30px; 
+  padding: 30px;
   border-radius: 8px;
-  width: 550px; 
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); 
+  width: 550px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .modal-actions {
   display: flex;
-  justify-content: flex-end; 
+  justify-content: flex-end;
   margin-top: 20px;
 }
 
 .btn {
-  padding: 10px 20px; 
-  margin-left: 10px; 
+  padding: 10px 20px;
+  margin-left: 10px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -78,7 +78,8 @@ const cancel = () => {
 .modal-content > * {
   margin-bottom: 15px;
 }
-input[type="text"], input[type="number"] {
+input[type='text'],
+input[type='number'] {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
